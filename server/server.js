@@ -9,20 +9,20 @@ import { inngest, functions } from "./inngest/index.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connect database
-await connectDB();
+// yahan se hata diya: await connectDB();
 
 // Middlewares
 app.use(express.json());
 app.use(cors());
 app.use(clerkMiddleware());
 
-// Test route
-app.get("/", (req, res) => {
+//  Test route (yahan DB connect karao)
+app.get("/", async (req, res) => {
+  await connectDB();
   res.send("Server is Live!");
 });
 
-// Inngest route
+//  Inngest route (DB yahan nahi chalega)
 app.use(
   "/api/inngest",
   serve({
