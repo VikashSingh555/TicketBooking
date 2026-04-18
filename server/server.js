@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config();
-console.log("ENV TEST:", process.env.MONGO_URI);
-
 import express from "express";
 import cors from "cors";
+import "dotenv/config";
 import connectDB from "./configs/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import { serve } from "inngest/express";
