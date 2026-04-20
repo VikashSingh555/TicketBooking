@@ -43,7 +43,7 @@ export const addShow = async (req, res)=>{
                 release_date: movieApiData.release_date,
                 original_language: movieApiData.original_language,
                 genres: movieApiData.genres,
-                casts: movieApiData.casts,
+                casts: movieCreditsData.casts,
                 vote_average: movieApiData.vote_average,
                 tagline: movieApiData.tagline || "",
                 runtime: movieApiData.runtime
@@ -53,7 +53,7 @@ export const addShow = async (req, res)=>{
         }
 
         const showsToCreate = [];
-        showsInput.array.forEach(show => {
+        showsInput.forEach(show => {
             const showDate = show.date;
             show.time.forEach((time)=>{
                 const dateTimeString = `${showDate}T${time}`;
