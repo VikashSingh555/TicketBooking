@@ -1,15 +1,21 @@
 import { Inngest } from "inngest";
 import User from "../models/User.js";
+import connectDB from "../configs/db.js";
 
 export const inngest = new Inngest({ id: "movie-ticket-booking" });
 
+// helper to ensure DB is connected for every run
+const ensureDB = async () => {
+  await connectDB();
+};
+
 // save user
 const syncUserCreation = inngest.createFunction(
-  {
-    id: "sync-user-from-clerk",
-    triggers: { event: "clerk/user.created" },
-  },
+  { id: "sync-user-from-clerk" },
+  { event: "clerk/user.created" },
   async ({ event }) => {
+    await ensureDB(); //  MOST IMPORTANT LINE
+
     const { id, first_name, last_name, email_addresses, image_url } =
       event.data;
 
@@ -20,29 +26,29 @@ const syncUserCreation = inngest.createFunction(
       image: image_url,
     };
 
-    await User.create(userData);
+    await User.findByIdAndUpdate(id, userData, { upsert: true });
   }
 );
 
-// delete user
+//  delete user
 const syncUserDeletion = inngest.createFunction(
-  {
-    id: "delete-user-with-clerk",
-    triggers: { event: "clerk/user.deleted" },
-  },
+  { id: "delete-user-with-clerk" },
+  { event: "clerk/user.deleted" },
   async ({ event }) => {
+    await ensureDB(); // 
+
     const { id } = event.data;
     await User.findByIdAndDelete(id);
   }
 );
 
-// update user
+//  update user
 const syncUserUpdation = inngest.createFunction(
-  {
-    id: "update-user-from-clerk",
-    triggers: { event: "clerk/user.updated" },
-  },
+  { id: "update-user-from-clerk" },
+  { event: "clerk/user.updated" },
   async ({ event }) => {
+    await ensureDB(); // 
+
     const { id, first_name, last_name, email_addresses, image_url } =
       event.data;
 
@@ -53,7 +59,7 @@ const syncUserUpdation = inngest.createFunction(
       image: image_url,
     };
 
-    await User.findByIdAndUpdate(id, userData);
+    await User.findByIdAndUpdate(id, userData, { upsert: true });
   }
 );
 
