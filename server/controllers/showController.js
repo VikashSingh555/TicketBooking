@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Movie from '../models/Movie.js';
-import mongoose from 'mongoose';
 import Show from '../models/Show.js';
 
 export const getNowPlayingMovies = async (req, res)=>{
