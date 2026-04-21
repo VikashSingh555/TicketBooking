@@ -86,7 +86,7 @@ export const getShows = async (req, res) => {
     const shows = await Show.find({
       showDateTime: { $gte: now }
     })
-      .populate("movie") // 🔥 movie details yahin se aayengi
+      .populate("movie") //  movie details yahin se aayengi
       .sort({ showDateTime: 1 });
 
     res.status(200).json({
@@ -107,39 +107,16 @@ export const getShows = async (req, res) => {
 export const getShow = async (req, res) => {
   try {
     const { movieId } = req.params;
-    const now = new Date();
 
-    const shows = await Show.find({
-      movie: movieId,
-      showDateTime: { $gte: now }
-    }).sort({ showDateTime: 1 });
-
-    const movie = await Movie.findOne({
-      id: movieId
-    });
-
-    const dateTime = {};
-
-    shows.forEach((show) => {
-      const date = new Date(show.showDateTime)
-        .toISOString()
-        .split("T")[0];
-
-      if (!dateTime[date]) {
-        dateTime[date] = [];
-      }
-
-      dateTime[date].push({
-        time: show.showDateTime,
-        showId: show._id
-      });
-    });
+    const shows = await Show.find({ movie: movieId })
+      .populate("movie") //  movie details add karega
+      .sort({ showDateTime: 1 });
 
     res.status(200).json({
       success: true,
-      movie,
-      dateTime
+      shows
     });
+
   } catch (error) {
     console.error("getShow error:", error);
 
@@ -149,3 +126,4 @@ export const getShow = async (req, res) => {
     });
   }
 };
+
