@@ -78,19 +78,32 @@ export const addShow = async (req, res)=>{
     }
 }
 
-export const getShows = async (req, res) =>{
-    try {
-        const shows = await Show.find({showDateTime: {$gte: new Date()}}).populate('movie').sort({showDateTime: 1});
+export const getShows = async (req, res) => {
+  try {
+    const shows = await Show.find({
+      showDateTime: { $gte: new Date() }
+    })
+      .populate("movie")
+      .sort({ showDateTime: 1 });
 
-        const uniqueShows = new Set(shows.map(show => show.movie))
+    const uniqueMovies = [
+      ...new Map(
+        shows.map((item) => [item.movie?._id.toString(), item.movie])
+      ).values(),
+    ].filter(Boolean);
 
-        res.json({success: true, shows: Array.from(uniqueShows)})
-    } catch (error) {
-        console.error(error);
-        res.json({success: false, message: error.message });
-
-    }
-}
+    res.status(200).json({
+      success: true,
+      shows: uniqueMovies,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 export const getShow = async (req, res) =>{
     try {
