@@ -78,29 +78,28 @@ export const addShow = async (req, res)=>{
     }
 }
 
+import Show from "../models/Show.js";
+
 export const getShows = async (req, res) => {
   try {
     const shows = await Show.find({
       showDateTime: { $gte: new Date() }
-    })
-      .populate("movie")
-      .sort({ showDateTime: 1 });
+    }).sort({ showDateTime: 1 });
 
+    // unique movies nikalne ke liye (TMDB movie id ke basis par)
     const uniqueMovies = [
-      ...new Map(
-        shows.map((item) => [item.movie?._id.toString(), item.movie])
-      ).values(),
-    ].filter(Boolean);
+      ...new Map(shows.map((item) => [item.movie.toString(), item])).values()
+    ];
 
     res.status(200).json({
       success: true,
-      shows: uniqueMovies,
+      shows: uniqueMovies
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message
     });
   }
 };
