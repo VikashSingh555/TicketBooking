@@ -81,13 +81,19 @@ export const addShow = async (req, res)=>{
 
 export const getShows = async (req, res) => {
   try {
+    const now = new Date();
+
     const shows = await Show.find({
-      showDateTime: { $gte: new Date() }
+      showDateTime: { $gte: now }
     }).sort({ showDateTime: 1 });
 
-    // unique movies nikalne ke liye (TMDB movie id ke basis par)
     const uniqueMovies = [
-      ...new Map(shows.map((item) => [item.movie.toString(), item])).values()
+      ...new Map(
+        shows.map((item) => [
+          item.movie.toString(),
+          item
+        ])
+      ).values()
     ];
 
     res.status(200).json({
@@ -95,7 +101,8 @@ export const getShows = async (req, res) => {
       shows: uniqueMovies
     });
   } catch (error) {
-    console.log(error);
+    console.error("getShows error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message
@@ -103,25 +110,48 @@ export const getShows = async (req, res) => {
   }
 };
 
-export const getShow = async (req, res) =>{
-    try {
-        const {movieId} = req.params;
-        const shows = await Show.find({movie: movieId, showDateTime: {$gte: new Date() }})
+export const getShow = async (req, res) => {
+  try {
+    const { movieId } = req.params;
+    const now = new Date();
 
-        const movie = await Movie.findById(movieId);
-        const dateTime = {};
+    const shows = await Show.find({
+      movie: movieId,
+      showDateTime: { $gte: now }
+    }).sort({ showDateTime: 1 });
 
-        shows.forEach((show) => {
-            const date = show.showDateTime.toISOString().split("T")[0];
-            if(!dateTime[date]){
-                dateTime[date] = []
-            }
-            dateTime[date].push({time: show.showDateTime, showId: show._id})
+    const movie = await Movie.findOne({
+      id: movieId
+    });
 
-        })
-        res.json({success: true, movie, dateTime})
-    } catch (error) {
-        console.error(error);
-        res.json({success: false, message: error.message });
-    }
-}
+    const dateTime = {};
+
+    shows.forEach((show) => {
+      const date = new Date(show.showDateTime)
+        .toISOString()
+        .split("T")[0];
+
+      if (!dateTime[date]) {
+        dateTime[date] = [];
+      }
+
+      dateTime[date].push({
+        time: show.showDateTime,
+        showId: show._id
+      });
+    });
+
+    res.status(200).json({
+      success: true,
+      movie,
+      dateTime
+    });
+  } catch (error) {
+    console.error("getShow error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
