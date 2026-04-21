@@ -78,7 +78,6 @@ export const addShow = async (req, res)=>{
     }
 }
 
-import Show from "../models/Show.js";
 
 export const getShows = async (req, res) => {
   try {
