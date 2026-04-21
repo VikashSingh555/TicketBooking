@@ -85,21 +85,15 @@ export const getShows = async (req, res) => {
 
     const shows = await Show.find({
       showDateTime: { $gte: now }
-    }).sort({ showDateTime: 1 });
-
-    const uniqueMovies = [
-      ...new Map(
-        shows.map((item) => [
-          item.movie.toString(),
-          item
-        ])
-      ).values()
-    ];
+    })
+      .populate("movie") // 🔥 movie details yahin se aayengi
+      .sort({ showDateTime: 1 });
 
     res.status(200).json({
       success: true,
-      shows: uniqueMovies
+      shows
     });
+
   } catch (error) {
     console.error("getShows error:", error);
 
