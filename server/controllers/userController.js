@@ -42,3 +42,17 @@ export const updateFavorite = async (req, res) => {
         res.json({success: false, message: error.message});
     }
 }
+
+export const getFavorite = async (req, res) =>{
+    try {
+        const user = await clerkClient.users.getUser(req.auth().userId)
+        const favorites = user.privateMetadata.favorites;
+
+        const movies = await Movie.find({_id: {$in: favorites}})
+        res.json({success: true, movies})
+        
+    } catch (error) {
+        console.error(error.message)
+        res.json({success: false, message: error.message});
+    }
+}
