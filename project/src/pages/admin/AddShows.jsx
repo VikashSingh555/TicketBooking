@@ -163,7 +163,7 @@ const AddShows = () => {
               <li key={date}>
                   <div className='font-medium'>{date}</div>
                   <div className='flex flex-wrap gap-2 mt-1 text-sm'>
-                    {times.map((time) => (
+                    {Array.isArray(times) && times.map((time) => (
                       <div key={time} className='border border-primary px-2 py-1 flex items-center rounded'>
                         <span>{time}</span>
                         <DeleteIcon onClick={() => handleRemoveTime(date, time)} width={15} className='ml-2 text-red-500 hover:text-red-700 cursor-pointer'/>
