@@ -6,7 +6,7 @@ import { useAppContext } from '../../context/AppContext'
 import Loading from '../../component/Loading'
 
 const Layout = () => {
-  const {isadmin, fetchIsAdmin} = useAppContext()
+  const {isAdmin, fetchIsAdmin} = useAppContext()
   
   useEffect(()=>{
     fetchIsAdmin()
