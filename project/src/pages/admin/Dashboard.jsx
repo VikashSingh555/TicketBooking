@@ -5,8 +5,12 @@ import Loading from '../../component/Loading';
 import Title from '../../component/admin/Title';
 import BlurCricle from '../../component/BlurCricle';
 import { dateFormate } from '../../lib/dateFormate';
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
+
+    const {axios, getToken, user, image_base_url} = useAppContext()
 
     const currency = import.meta.env.VITE_CURRENCY 
 
@@ -26,13 +30,24 @@ const Dashboard = () => {
     ]
 
     const fetchDashboardData = async () => {
-      setDashboardData(dummyDashboardData)
-      setLoading(false)
+      try {
+        const {data} = axios.get('/api/admin/dashboard', {headers: { Authorization: `Bearer ${await getToken()}`}})
+        if(data.success){
+          setDashboardData(data.dashboardData)
+          setLoading(false)
+        }else{
+          toast.error(data.message)
+        }
+      } catch (error) {
+        toast.error("Error fetching data:", error)
+      }
     };
 
     useEffect(() => {
+      if(user){
         fetchDashboardData();
-    }, [])
+      }
+    }, [user]);
 
   return !loading ? (
     <>
