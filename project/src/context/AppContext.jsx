@@ -22,6 +22,8 @@ export const AppProvider = ({children})=>{
     const fetchIsAdmin = async () => {
         try {
             const {data} = await axios.get('/api/admin/is-admin', {headers: {Authorization: `Bearer ${await getToken()}`}})
+
+            console.log("ADMIN:", data)
             setIsAdmin(data.isAdmin)
 
             if(!data.isAdmin && location.pathname.startsWith('/admin')){
@@ -30,6 +32,7 @@ export const AppProvider = ({children})=>{
             }
         } catch (error) {
             console.error(error)
+            setIsAdmin(false)
         }
     }
 
