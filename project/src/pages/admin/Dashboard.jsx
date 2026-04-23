@@ -31,7 +31,7 @@ const Dashboard = () => {
 
     const fetchDashboardData = async () => {
       try {
-        const {data} = axios.get('/api/admin/dashboard', {headers: { Authorization: `Bearer ${await getToken()}`}})
+        const {data} = await axios.get('/api/admin/dashboard', {headers: { Authorization: `Bearer ${await getToken()}`}})
         if(data.success){
           setDashboardData(data.dashboardData)
           setLoading(false)
