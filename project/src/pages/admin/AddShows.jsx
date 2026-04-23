@@ -64,9 +64,30 @@ const AddShows = () => {
         if(!selectedMovies || Object.keys(dateTimeSelection).length === 0 || !showPrice){
           return toast('Missing required fields');
         }
+
+        const showInput = Object.entries(dateTimeSelection).map(([data, time])=> ({data, time}));
+
+        const payload = {
+          movieId: selectedMovies,
+          showInput,
+          showPrice: Number(showPrice)
+        }
+
+        const {data} = await axios.post('/api/show/add', payload, {headers: { Authorization: `Bearer ${await getToken()}`}})
+
+        if(data.success){
+          toast.success(data.message)
+          setSelectedMovies(null)
+          setDateTimeSelection({})
+          setShowPrice("")
+        } else{
+          toast.error(data.message)
+        }
       } catch (error) {
-        
+        console.error("Submission error:", error);
+        toast.error('An error occurred. Please try again.')
       }
+      setAddingShow(false)
     }
     
      useEffect(() => {
