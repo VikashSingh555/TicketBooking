@@ -59,7 +59,7 @@ export const addShow = async (req, res)=>{
 
   (Array.isArray(show.time) ? show.time : []).forEach((time) => {
 
-    const dateTimeString = ${showDate}T${time};
+    const dateTimeString = `${showDate}T${time}`;
 
     showsToCreate.push({
       movie: movieId,
