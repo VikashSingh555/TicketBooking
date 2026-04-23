@@ -16,6 +16,7 @@ const AddShows = () => {
     const [dateTimeSelection, setDateTimeSelection] = useState({});
     const [dateTimeInput, setDateTimeInput] = useState('');
     const [showPrice, setShowPrice] = useState('');
+    const [addingShow, setAddingShow] = useState(false)
 
     const fetchNowPlayingMovies = async () => {
       try {
