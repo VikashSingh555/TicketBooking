@@ -55,40 +55,49 @@ const AddShows = () => {
     };
 
     const handleSubmit = async () => {
-      try {
-        setAddingShow(true)
+  console.log("CLICKED");
 
-        if(!selectedMovies || Object.keys(dateTimeSelection).length === 0 || !showPrice){
-          return toast('Missing required fields');
-        }
+  if (!selectedMovies || !showPrice || Object.keys(dateTimeSelection || {}).length === 0) {
+    alert("Missing fields");
+    return;
+  }
 
-        const showInput = Object.entries(dateTimeSelection).map(([date, times]) => ({
-            date,
-            time: times // array hi bhejo
-           }));
+  try {
+    setAddingShow(true);
 
-        const payload = {
-          movieId: selectedMovies,
-          showInput,
-          showPrice: Number(showPrice)
-        }
+    const showInput = Object.entries(dateTimeSelection).map(([date, times]) => ({
+      date,
+      time: Array.isArray(times) ? times : []
+    }));
 
-        const {data} = await axios.post('/api/show/add', payload, {headers: { Authorization: `Bearer ${await getToken()}`}})
+    const payload = {
+      movieId: selectedMovies,
+      showInput,
+      showPrice: Number(showPrice)
+    };
 
-        if(data.success){
-          toast.success(data.message)
-          setSelectedMovies(null)
-          setDateTimeSelection({})
-          setShowPrice("")
-        } else{
-          toast.error(data.message)
-        }
-      } catch (error) {
-        console.error("Submission error:", error);
-        toast.error('An error occurred. Please try again.')
-      }
-      setAddingShow(false)
+    console.log("PAYLOAD:", payload);
+
+    const res = await axios.post("http://localhost:3000/api/show/add", payload);
+
+    console.log("RESPONSE:", res.data);
+
+    if (res.data.success) {
+      alert("Show Added Successfully ");
+      setSelectedMovies(null);
+      setDateTimeSelection({});
+      setShowPrice("");
+    } else {
+      alert(res.data.message);
     }
+
+  } catch (error) {
+    console.error("ERROR:", error);
+    alert("API Error ");
+  }
+
+  setAddingShow(false);
+};
     
      useEffect(() => {
       if(user){
