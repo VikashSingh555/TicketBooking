@@ -56,9 +56,11 @@ const AddShows = () => {
       });
     };
 
-    useEffect(() => {
+     useEffect(() => {
+      if(user){
         fetchNowPlayingMovies();
-    },[]);
+      }
+    },[user]);
 
   return nowPlayingMovies.length > 0 ? (
     <>
