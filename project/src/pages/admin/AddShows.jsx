@@ -62,12 +62,10 @@ const AddShows = () => {
           return toast('Missing required fields');
         }
 
-        const showInput = Object.entries(dateTimeSelection || {}).flatMap(([date, times]) => 
-            (Array.isArray(times) ? times : []).map(time => ({
-                date,
-                time
-             }))
-           );
+        const showInput = Object.entries(dateTimeSelection).map(([date, times]) => ({
+            date,
+            time: times // array hi bhejo
+           }));
 
         const payload = {
           movieId: selectedMovies,
