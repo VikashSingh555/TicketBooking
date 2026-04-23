@@ -11,7 +11,7 @@ const Layout = () => {
   useEffect(()=>{
     fetchIsAdmin()
   },[])
-  return isadmin ? (
+  return isAdmin ? (
     <>
     <AdminNavbar/>
     <div className='flex'>
