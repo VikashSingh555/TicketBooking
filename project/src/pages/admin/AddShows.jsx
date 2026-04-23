@@ -30,18 +30,15 @@ const AddShows = () => {
     };
 
     const handleDateTimeAdd = () => {
-      if(!dateTimeInput) return;
-      const [date, time] = dateTimeInput.split('T');
-      if(!date || !time) return;
+  if (!dateTimeInput) return;
 
-      setDateTimeSelection((prev) => {
-        const times = prev[date] || [];
-        if(!times.includes(time)){
-          return{...prev, [date]: [...times, time]};
-        }
-        return prev;
-      });
-    };
+  const [date, time] = dateTimeInput.split("T");
+
+  setDateTimeSelection(prev => ({
+    ...prev,
+    [date]: [...(prev[date] || []), time]
+  }));
+};
 
     const handleRemoveTime = (date, time) => {
       setDateTimeSelection((prev) => {
