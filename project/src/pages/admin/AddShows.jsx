@@ -62,7 +62,7 @@ const AddShows = () => {
           return toast('Missing required fields');
         }
 
-        const showInput = Object.entries(dateTimeSelection).map(([data, time])=> ({data, time}));
+        const showInput = Object.entries(dateTimeSelection).map(([date, time])=> ({date, time}));
 
         const payload = {
           movieId: selectedMovies,
